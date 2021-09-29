@@ -3,12 +3,12 @@ import "../components/layout.css"
 import Iframe from "react-iframe"
 import Seo from "../components/seo"
 
-const IndexPage = () => (
+const FeedbackPage = () => (
   <>
-    <Seo title="Trabaja en El Corte Inglés" />
+    <Seo title="Feeback El Corte Inglés" />
     <div style={{ width: "100vw", height: "100vh" }}>
       <Iframe
-        url="https://chat.33bot.io/60d24a0a22fd330008d9ad94?r=web&close=0"
+        url="https://chat.33bot.io/60d461e80ccdd00008e537b9?r=web&close=0"
         width="100%"
         height="100%"
         allow="camera;microphone"
@@ -18,4 +18,4 @@ const IndexPage = () => (
   </>
 )
 
-export default IndexPage
+export default FeedbackPage

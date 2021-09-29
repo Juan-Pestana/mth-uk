@@ -19,6 +19,29 @@ body {
   -webkit-font-feature-settings: "kern", "liga", "clig", "calt";
   font-feature-settings: "kern", "liga", "clig", "calt";
 }
+
+html,
+body,
+iframe {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+iframe {
+  position: absolute;
+}
+
 article,
 aside,
 details,
