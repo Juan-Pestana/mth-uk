@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
+    title: `Trabaja en MTH`,
     description: `hr bot factory: Automatización de procesos de Recursos Humanos`,
     author: `https://hrbotfactory.com/`,
   },
@@ -25,7 +25,7 @@ module.exports = {
         background_color: `#663399`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/images/eciico.png`, // This path is relative to the root of the site.
+        icon: `src/images/faviconmvm.png`, // This path is relative to the root of the site.
       },
     },
     `gatsby-plugin-gatsby-cloud`,

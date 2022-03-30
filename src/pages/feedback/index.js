@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react"
-import "../components/layout.css"
+import "../../components/layout.css"
 import Iframe from "react-iframe"
-import Seo from "../components/seo"
+import Seo from "../../components/seo"
 import axios from "axios"
 import * as queryString from "query-string"
 
-const InbPage = ({ location }) => {
-  const { candidatura, candidato } = queryString.parse(location.search)
-
+const FeedbackPage = ({ location }) => {
+  const { name } = queryString.parse(location.search)
+  const feedback = "Sí"
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState("no sesion")
 
@@ -24,7 +24,7 @@ const InbPage = ({ location }) => {
       const getBotId = await axios({
         method: "get", //you can set what request you want to be
         url:
-          "https://api.33bot.io/v1/conversation/chat/60d330fdf399c400082b0cec/bots",
+          "https://api.33bot.io/v1/conversation/chat/618f859008432100091cef77/bots",
         headers,
       })
       //const bot_id = getBotId.data[0].id
@@ -47,13 +47,13 @@ const InbPage = ({ location }) => {
         data: {
           session_id: someSession,
           global_vars: {
-            sfCandidato: {
-              text: parseInt(candidato),
-              value: parseInt(candidato),
+            nombre: {
+              text: name,
+              value: name,
             },
-            sfCandidatura: {
-              text: parseInt(candidatura),
-              value: parseInt(candidatura),
+            feedback: {
+              text: feedback,
+              value: feedback,
             },
           },
         },
@@ -71,13 +71,13 @@ const InbPage = ({ location }) => {
 
   return (
     <>
-      <Seo title="Trabaja en El Corte Inglés" />
+      <Seo title="Trabaja en Modern Talent Hub" />
       <div style={{ width: "100vw", height: "100vh" }}>
         {loading ? (
           <div>Cargando...</div>
         ) : (
           <Iframe
-            url={`https://chat.33bot.io/60d461a666f3de0008c371df?r=web&close=0&session=${session}`}
+            url={`https://chat.33bot.io/6193b5f8e66a150009517d1e?r=web&close=0&session=${session}`}
             width="100%"
             height="100%"
             allow="camera;microphone"
@@ -89,4 +89,4 @@ const InbPage = ({ location }) => {
   )
 }
 
-export default InbPage
+export default FeedbackPage

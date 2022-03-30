@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react"
-import "../components/layout.css"
+import "../../components/layout.css"
 import Iframe from "react-iframe"
-import Seo from "../components/seo"
+import Seo from "../../components/seo"
 import axios from "axios"
-//import * as queryString from "query-string"
+import * as queryString from "query-string"
 
-const BotPage = () => {
-  const name = "jr_tech"
-  const feedback = "No"
+const FeedbackPagePt = ({ location }) => {
+  const { name, c } = queryString.parse(location.search)
+
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState("no sesion")
 
@@ -24,7 +24,7 @@ const BotPage = () => {
       const getBotId = await axios({
         method: "get", //you can set what request you want to be
         url:
-          "https://api.33bot.io/v1/conversation/chat/618f859008432100091cef77/bots",
+          "https://api.33bot.io/v1/conversation/chat/61d4163973e5c80008c9363b/bots",
         headers,
       })
       //const bot_id = getBotId.data[0].id
@@ -47,13 +47,13 @@ const BotPage = () => {
         data: {
           session_id: someSession,
           global_vars: {
-            candidatura_seleccionada: {
+            nombre: {
               text: name,
               value: name,
             },
-            feedback: {
-              text: feedback,
-              value: feedback,
+            candidatura_seleccionada: {
+              text: c,
+              value: c,
             },
           },
         },
@@ -66,18 +66,19 @@ const BotPage = () => {
     } catch (error) {
       console.log(error)
     }
-    console.log(`iniciando chatbot con sesión ${session}`)
   }
+  console.log(`iniciando chatbot con sesión ${session}`)
 
   return (
     <>
-      <Seo title="Trabaja en Modern Talent Hub" />
+      <Seo title="Feeback Modern Talent Hub" />
+
       <div style={{ width: "100vw", height: "100vh" }}>
         {loading ? (
-          <div>Cargando...</div>
+          <p> Cargando... </p>
         ) : (
           <Iframe
-            url={`https://chat.33bot.io/6193b5f8e66a150009517d1e?r=web&close=0&session=${session}`}
+            url={`https://chat.33bot.io/61d4262a5ae8f900085ac84b?r=web&close=0&session=${session}`}
             width="100%"
             height="100%"
             allow="camera;microphone"
@@ -89,4 +90,4 @@ const BotPage = () => {
   )
 }
 
-export default BotPage
+export default FeedbackPagePt
