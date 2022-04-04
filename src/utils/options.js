@@ -1,5 +1,9 @@
 export const certificados = [
   {
+    value: "Nenhum",
+    label: "Nenhum",
+  },
+  {
     value: "AZ-900 Azure Fundamentals",
     label: "AZ-900 Azure Fundamentals",
   },
@@ -124,6 +128,10 @@ export const certificados = [
 ]
 
 export const devops = [
+  {
+    value: "Nenhuma",
+    label: "Nenhuma",
+  },
   {
     value: "CI/CD",
     label: "CI/CD",
