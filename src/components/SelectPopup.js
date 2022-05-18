@@ -31,7 +31,7 @@ const SelectPopup = props => {
         <div className="content">
           <div>{props.children}</div>
           <div>
-            <button onClick={closeHandler}>Enviar</button>
+            <button onClick={closeHandler}>Send</button>
           </div>
         </div>
       </div>
