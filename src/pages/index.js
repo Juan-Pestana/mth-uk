@@ -6,9 +6,17 @@ import axios from "axios"
 import SelectPopup from "../components/SelectPopup"
 import Select from "react-select"
 import { certificados, devops, security } from "../utils/options"
-//import * as queryString from "query-string"
+import * as queryString from "query-string"
 
-const UkPage = () => {
+const UkPage = ({ location }) => {
+  const { sid } = queryString.parse(location.search)
+
+  const isBrowser = typeof window !== "undefined"
+  let lsSession =
+    isBrowser && localStorage.getItem("session")
+      ? localStorage.getItem("session")
+      : null
+
   const name = "Developer"
   const feedback = "No"
 
@@ -23,7 +31,16 @@ const UkPage = () => {
   }
 
   useEffect(() => {
-    getBotId()
+    if (sid) {
+      setSession(sid)
+      setLoading(false)
+    } else if (lsSession) {
+      setSession(lsSession)
+      setLoading(false)
+    } else {
+      getBotId()
+    }
+
     eventSubscribe()
   }, [])
 
@@ -48,6 +65,7 @@ const UkPage = () => {
 
       const someSession = newSession.data.id
       setSession(someSession)
+      localStorage.setItem("session", someSession)
 
       const updateSession = await axios({
         method: "post", //you can set what request you want to be
@@ -62,6 +80,10 @@ const UkPage = () => {
             feedback: {
               text: feedback,
               value: feedback,
+            },
+            bot_url: {
+              text: `${location.origin}${location.pathname}?sid=${someSession}`,
+              value: `${location.origin}${location.pathname}?sid=${someSession}`,
             },
           },
         },
@@ -134,6 +156,9 @@ const UkPage = () => {
             case "openSelect4":
               setSelectInput("security")
               setVisibility(true)
+              break
+            case "clearStorage":
+              localStorage.removeItem("session")
               break
             default:
               console.log(data)
