@@ -24,7 +24,11 @@ const SelectPopup = props => {
     >
       <div className="popup">
         <h2>{props.title}</h2>
-        <span className="close" onClick={closeHandler}>
+        <span
+          className="close"
+          onClick={closeHandler}
+          style={{ display: "none" }}
+        >
           &times;
         </span>
         <hr />
