@@ -4,6 +4,10 @@ export const certificados = [
     label: "None",
   },
   {
+    value: "Other",
+    label: "Other, non listed",
+  },
+  {
     value: "MB-240 Dynamics 365 Field Service Functional Consultant Associate",
     label: "MB-240 Dynamics 365 Field Service Functional Consultant Associate",
   },
@@ -83,10 +87,6 @@ export const certificados = [
     label:
       "MB-800 Dynamics 365 Business Central Functional Consultant Associate",
   },
-  {
-    value: "Other",
-    label: "Other, non listed",
-  },
 ]
 
 export const devops = [
@@ -129,6 +129,10 @@ export const devops = [
 ]
 
 export const security = [
+  {
+    value: "None",
+    label: "None",
+  },
   {
     value: "Datadog Security",
     label: "Datadog Security",
@@ -184,9 +188,5 @@ export const security = [
   {
     value: "Okta",
     label: "Okta",
-  },
-  {
-    value: "Nenhuma",
-    label: "Nenhuma",
   },
 ]
