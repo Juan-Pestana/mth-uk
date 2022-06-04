@@ -22,7 +22,7 @@ const UkPage = ({ location }) => {
 
   const [sel, setSel] = useState([])
   const [selectInput, setSelectInput] = useState("")
-  const [visibility, setVisibility] = useState(true)
+  const [visibility, setVisibility] = useState(false)
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState("no sesion")
 
