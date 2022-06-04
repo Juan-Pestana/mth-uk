@@ -702,6 +702,9 @@ pre tt:after {
 .select__single-value input {
   font-family: sans-serif;
 }
+.select__menu {
+  max-height: 90vh;
+}
 
 @media screen and (max-width: 700px) {
   .popup {
