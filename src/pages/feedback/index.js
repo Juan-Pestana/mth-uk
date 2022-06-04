@@ -155,6 +155,7 @@ const FeedbackPageUK = ({ location }) => {
         <SelectPopup
           onClose={popupCloseHandler}
           show={visibility}
+          selection={sel}
           title={
             selectInput === "cert single"
               ? "Diga-nos a Certificação do seu programa"

@@ -676,6 +676,15 @@ pre tt:after {
   height: 70%;
 }
 
+.popup .content .error {
+  margin: 20px 10px;
+  padding: 10px 15px;
+  background-color: rgba(236, 13, 62, 0.55);
+  color: #fff;
+  border-radius: 10px;
+  text-align: center;
+}
+
 .popup .content button {
   display: block;
   width: 100%;

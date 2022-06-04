@@ -22,7 +22,7 @@ const UkPage = ({ location }) => {
 
   const [sel, setSel] = useState([])
   const [selectInput, setSelectInput] = useState("")
-  const [visibility, setVisibility] = useState(false)
+  const [visibility, setVisibility] = useState(true)
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState("no sesion")
 
@@ -118,7 +118,7 @@ const UkPage = ({ location }) => {
     await updateData()
     //setSel([])
     setVisibility(false)
-    console.log(sel)
+    //  console.log(sel)
   }
 
   let changeHandler = value => {
@@ -189,6 +189,7 @@ const UkPage = ({ location }) => {
         <SelectPopup
           onClose={popupCloseHandler}
           show={visibility}
+          selection={sel}
           title={
             selectInput === "cert single"
               ? "Select a certificate program"

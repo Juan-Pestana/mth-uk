@@ -3,9 +3,19 @@ import React, { useEffect, useState } from "react"
 
 const SelectPopup = props => {
   const [show, setShow] = useState(false)
+  const [error, setError] = useState("")
 
   const closeHandler = e => {
+    if (!props.selection.length) {
+      setError("this is an error")
+      setTimeout(() => {
+        setError("")
+      }, 3000)
+      return
+    }
+
     setShow(false)
+    setError(false)
 
     props.onClose(false)
   }
@@ -34,7 +44,14 @@ const SelectPopup = props => {
         <hr />
         <div className="content">
           <div>{props.children}</div>
+
           <div>
+            {error && (
+              <div className="error">
+                <div>Please select a valid input</div>
+                <small>"Other" or "None" are also valid</small>
+              </div>
+            )}
             <button onClick={closeHandler}>Send</button>
           </div>
         </div>
