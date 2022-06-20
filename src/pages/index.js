@@ -7,6 +7,7 @@ import SelectPopup from "../components/SelectPopup"
 import Select from "react-select"
 import { certificados, devops, security } from "../utils/options"
 import * as queryString from "query-string"
+import Layout from "../components/layout"
 
 const UkPage = ({ location }) => {
   const { sid } = queryString.parse(location.search)
@@ -173,83 +174,85 @@ const UkPage = ({ location }) => {
 
   return (
     <>
-      <Seo title="Join Modern Talent Hub" />
-      <div style={{ width: "100vw", height: "100vh" }}>
-        {loading ? (
-          <div className="loader">Cargando...</div>
-        ) : (
-          <Iframe
-            url={`https://chat.33bot.io/626a685ddd786d0009a4e72f?r=web&close=0&session=${session}`}
-            width="100%"
-            height="100%"
-            allow="camera;microphone"
-            frameborder="0"
-          />
-        )}
-        <SelectPopup
-          onClose={popupCloseHandler}
-          show={visibility}
-          selection={sel}
-          title={
-            selectInput === "cert single"
-              ? "Select a certificate program"
-              : selectInput === "cert multi"
-              ? "What other certificates do you have"
-              : selectInput === "devops"
-              ? "Select your DevOps Stack"
-              : "selecione suas ferramentas"
-          }
-        >
-          {selectInput === "cert single" ? (
-            <Select
-              className="basic-single"
-              classNamePrefix="select"
-              isClearable={true}
-              isSearchable={true}
-              name="certificados"
-              value={sel}
-              options={certificados}
-              onChange={changeHandler}
-            />
-          ) : selectInput === "cert multi" ? (
-            <Select
-              isMulti
-              className="basic-multi-select"
-              classNamePrefix="select"
-              isClearable={true}
-              isSearchable={true}
-              value={sel}
-              name="certificados"
-              options={certificados}
-              onChange={changeHandler}
-            />
-          ) : selectInput === "devops" ? (
-            <Select
-              isMulti
-              className="basic-multi-select"
-              classNamePrefix="select"
-              isClearable={true}
-              isSearchable={false}
-              name="devops"
-              value={sel}
-              options={devops}
-              onChange={changeHandler}
-            />
+      <Layout>
+        <Seo title="Join Modern Talent Hub" />
+        <div style={{ width: "100vw", height: "100vh" }}>
+          {loading ? (
+            <div className="loader">Cargando...</div>
           ) : (
-            <Select
-              isMulti
-              className="basic-multi-select"
-              classNamePrefix="select"
-              isClearable={true}
-              isSearchable={false}
-              name="security"
-              value={sel}
-              options={security}
-              onChange={changeHandler}
+            <Iframe
+              url={`https://chat.33bot.io/626a685ddd786d0009a4e72f?r=web&close=0&session=${session}`}
+              width="100%"
+              height="100%"
+              allow="camera;microphone"
+              frameborder="0"
             />
           )}
-        </SelectPopup>
-      </div>
+          <SelectPopup
+            onClose={popupCloseHandler}
+            show={visibility}
+            selection={sel}
+            title={
+              selectInput === "cert single"
+                ? "Select a certificate program"
+                : selectInput === "cert multi"
+                ? "What other certificates do you have"
+                : selectInput === "devops"
+                ? "Select your DevOps Stack"
+                : "selecione suas ferramentas"
+            }
+          >
+            {selectInput === "cert single" ? (
+              <Select
+                className="basic-single"
+                classNamePrefix="select"
+                isClearable={true}
+                isSearchable={true}
+                name="certificados"
+                value={sel}
+                options={certificados}
+                onChange={changeHandler}
+              />
+            ) : selectInput === "cert multi" ? (
+              <Select
+                isMulti
+                className="basic-multi-select"
+                classNamePrefix="select"
+                isClearable={true}
+                isSearchable={true}
+                value={sel}
+                name="certificados"
+                options={certificados}
+                onChange={changeHandler}
+              />
+            ) : selectInput === "devops" ? (
+              <Select
+                isMulti
+                className="basic-multi-select"
+                classNamePrefix="select"
+                isClearable={true}
+                isSearchable={false}
+                name="devops"
+                value={sel}
+                options={devops}
+                onChange={changeHandler}
+              />
+            ) : (
+              <Select
+                isMulti
+                className="basic-multi-select"
+                classNamePrefix="select"
+                isClearable={true}
+                isSearchable={false}
+                name="security"
+                value={sel}
+                options={security}
+                onChange={changeHandler}
+              />
+            )}
+          </SelectPopup>
+        </div>
+      </Layout>
     </>
   )
 }

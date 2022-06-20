@@ -23,27 +23,35 @@ const Layout = ({ children }) => {
     }
   `)
 
+  React.useEffect(() => {
+    run()
+  }, [])
+
+  let run = () => {
+    window.criteo_q = window.criteo_q || []
+
+    var deviceType = /iPad/.test(navigator.userAgent)
+      ? "t"
+      : /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Silk/.test(
+          navigator.userAgent
+        )
+      ? "m"
+      : "d"
+
+    window.criteo_q.push(
+      { event: "setAccount", account: 97048 },
+
+      { event: "setSiteType", type: deviceType },
+
+      { event: "viewItem", item: "1" }
+    )
+  }
+
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main>{children}</main>
-        <footer
-          style={{
-            marginTop: `2rem`,
-          }}
-        >
-          © {new Date().getFullYear()}, Built by
-          {` `}
-          <a href="https://www.hrbotfactory.com">hr bot factory</a>
-        </footer>
-      </div>
+      {/* <Header siteTitle={data.site.siteMetadata?.title || `Title`} /> */}
+
+      <main>{children}</main>
     </>
   )
 }

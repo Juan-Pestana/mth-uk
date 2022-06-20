@@ -69,7 +69,13 @@ function Seo({ description, lang, meta, title }) {
           content: metaDescription,
         },
       ].concat(meta)}
-    />
+    >
+      <script
+        type="text/javascript"
+        src="//dynamic.criteo.com/js/ld/ld.js?a=97048"
+        async="true"
+      />
+    </Helmet>
   )
 }
 
