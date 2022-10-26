@@ -633,18 +633,19 @@ pre tt:after {
   transition: opacity 500ms;
 }
 .popup {
-  margin: 50px auto;
+  margin: 0 auto;
   padding: 15px;
   background: #fff;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   width: 90vw;
-  height: 90vh;
-  max-height: 30rem;
+  height: fit-content;
   max-width: 600px;
   position: relative;
-  transition: all 5s ease-in-out;
+  top: 35%;
+  transform: translateY(-50%);
+  transition: all 3s ease-in-out;
 }
 
 .popup h2 {
@@ -677,16 +678,7 @@ pre tt:after {
   height: 70%;
 }
 
-.popup .content .error {
-  margin: 20px 10px;
-  padding: 10px 15px;
-  background-color: rgba(236, 13, 62, 0.55);
-  color: #fff;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.popup .content button {
+.popup .content button, .popup .content .upload_button {
   display: block;
   width: 100%;
   background-color: blue;
@@ -697,13 +689,12 @@ pre tt:after {
   font-size: 16px;
   font-weight: 700;
   padding: 15px 0 15px 0;
+  text-align: center;
+  cursor: pointer;
 }
 
 .select__single-value input {
   font-family: sans-serif;
-}
-.select__menu {
-  max-height: 90vh;
 }
 
 @media screen and (max-width: 700px) {
@@ -781,4 +772,27 @@ pre tt:after {
     box-shadow: 0 -2em;
     height: 5em;
   }
+}
+
+/* Uploader */
+#file_uploader {
+  display: none;
+}
+
+.uploaded_loading {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.uploaded_loading p {
+  text-align: center;
+}
+
+.loading_spinner {
+  width: 25%;
+  margin: 0 auto;
+}
+
+#submit_button {
+  display: none;
 }

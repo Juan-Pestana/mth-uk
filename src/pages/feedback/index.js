@@ -7,16 +7,24 @@ import SelectPopup from "../../components/SelectPopup"
 import Select from "react-select"
 import { certificados } from "../../utils/options"
 import * as queryString from "query-string"
+import PopupContainer from "../../components/popupContainer";
+import Uploader from "../../components/uploader";
 
 const FeedbackPageUK = ({ location }) => {
   const feedback = "Sí"
   const { name, c } = queryString.parse(location.search)
 
-  const [sel, setSel] = useState([])
-  const [selectInput, setSelectInput] = useState("")
-  const [visibility, setVisibility] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [session, setSession] = useState("no sesion")
+  const [ sel, setSel ] = useState([]);
+  const [ selectInput, setSelectInput ] = useState("");
+  const [ visibility, setVisibility ] = useState(false);
+  const [ loading, setLoading ] = useState(true);
+  const [ session, setSession ] = useState("no sesion");
+  const popUpTheme = '#011665';
+
+  const [ uploadType, setUploadType ] = useState("");
+  const [ clientId, setClientId ] = useState("");
+  const [ uploadContainerVisibility, setUploadContainerVisibility ] = useState(false);
+  const [ modalUploaderTitle, setModalUploaderTitle ] = useState('Sube tu archivo');
 
   const headers = {
     Authorization: "bearer 40b3ff5fdeaf4ca6851eecadd6eec23c",
@@ -26,6 +34,49 @@ const FeedbackPageUK = ({ location }) => {
     getBotId()
     eventSubscribe()
   }, [])
+
+  let changeHandler = value => {
+    if (value[0]) {
+      setSel([...value])
+    } else {
+      setSel([value])
+    }
+  }
+
+  let closeUploadPopupHandler = () => {
+    setUploadContainerVisibility( false );
+    replyAsUser("Volver");
+  }
+
+  const eventSubscribe = () => {
+    window.addEventListener(
+        "message",
+        function (event) {
+          const data = event.data
+          if (event.data.event) {
+            switch (data.event) {
+              case "clearStorage":
+                localStorage.removeItem("session")
+                break;
+              case "openSelect1":
+                //setSel([])
+                setSelectInput("cert single")
+                setVisibility(true)
+                break;
+              case "upload":
+                setModalUploaderTitle(data.modalUploaderTitle)
+                setUploadType(data.variable)
+                setClientId(data.client_id)
+                setUploadContainerVisibility(true)
+                break;
+              default:
+                console.log(data)
+            }
+          }
+        },
+        false
+    )
+  }
 
   const getBotId = async () => {
     try {
@@ -81,6 +132,26 @@ const FeedbackPageUK = ({ location }) => {
   }
   console.log(`iniciando chatbot con sesión ${session}`)
 
+  let popupCloseHandler = async () => {
+    await updateData()
+    //setSel([])
+    setVisibility(false)
+    console.log(sel)
+  }
+
+  let replyAsUser = async( message ) => {
+
+    await axios({
+      method: "post", //you can set what request you want to be
+      url: "https://api.33bot.io/v1/conversation/message/user",
+      data: {
+        session_id: session,
+        text: message,
+      },
+      headers,
+    })
+  }
+
   const updateData = async () => {
     const data = sel.map(sel => sel.value)
 
@@ -97,43 +168,39 @@ const FeedbackPageUK = ({ location }) => {
     setSel([])
   }
 
-  let popupCloseHandler = async () => {
-    await updateData()
-    //setSel([])
-    setVisibility(false)
-    console.log(sel)
-  }
+  const updateUploadData = async ( uploadedType, uploadedPath ) => {
+    let dataVars = {};
+    dataVars[uploadedType] = {
+      text: uploadedPath,
+      value: uploadedPath,
+    };
 
-  let changeHandler = value => {
-    if (value[0]) {
-      setSel([...value])
-    } else {
-      setSel([value])
-    }
-  }
-
-  const eventSubscribe = () => {
-    window.addEventListener(
-      "message",
-      function (event) {
-        const data = event.data
-        if (event.data.event) {
-          switch (data.event) {
-            case "clearStorage":
-              localStorage.removeItem("session")
-              break
-            case "openSelect1":
-              //setSel([])
-              setSelectInput("cert single")
-              setVisibility(true)
-              break
-            default:
-              console.log(data)
-          }
-        }
+    await axios({
+      method: "post", //you can set what request you want to be
+      url: "https://api.33bot.io/v1/conversation/update",
+      data: {
+        session_id: session,
+        global_vars: dataVars,
       },
-      false
-    )
+      headers,
+    })
+
+    let responseMessage = 'El archivo se ha subido correctamente';
+
+    await axios({
+      method: "post", //you can set what request you want to be
+      url: "https://api.33bot.io/v1/conversation/message/user",
+      data: {
+        session_id: session,
+        text: responseMessage,
+      },
+      headers,
+    })
+  }
+
+  let uploadPopupCloseHandler = (uploadedType, uploadedPath) => {
+    updateUploadData(uploadedType, uploadedPath)
+    setUploadContainerVisibility(false)
   }
 
   return (
@@ -158,12 +225,12 @@ const FeedbackPageUK = ({ location }) => {
           selection={sel}
           title={
             selectInput === "cert single"
-              ? "Diga-nos a Certificação do seu programa"
-              : selectInput === "cert multi"
-              ? "Quais outras certificações você tem?"
-              : selectInput === "devops"
-              ? "Sua Stack Dev/Ops"
-              : "selecione suas ferramentas"
+                ? "Select a certificate program"
+                : selectInput === "cert multi"
+                ? "What other certificates do you have"
+                : selectInput === "devops"
+                ? "Select your DevOps Stack"
+                : "selecione suas ferramentas"
           }
         >
           <Select
@@ -177,6 +244,22 @@ const FeedbackPageUK = ({ location }) => {
             onChange={changeHandler}
           />
         </SelectPopup>
+
+        <PopupContainer
+            onClose={closeUploadPopupHandler}
+            show={uploadContainerVisibility}
+            title={modalUploaderTitle}
+            showButton={false}
+        >
+          <Uploader
+              uploadType={ uploadType }
+              updateData={ updateUploadData }
+              popupClose={ uploadPopupCloseHandler }
+              popUpTheme={ popUpTheme }
+              clientId={ clientId }
+          />
+        </PopupContainer>
+
       </div>
     </>
   )

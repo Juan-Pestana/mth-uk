@@ -130,18 +130,6 @@ const UkPage = ({ location }) => {
     }
   }
 
-  let criteoTag = () =>{
-    window.criteo_q = window.criteo_q || [];
-  var deviceType = /iPad/.test(navigator.userAgent) ? "t" : /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Silk/.test(navigator.userAgent) ? "m" : "d";
-  window.criteo_q.push(
-    { event: "setAccount", account: 97048},
-    { event: "setSiteType", type: deviceType},
-    { event: "trackTransaction", id: Math.floor(Math.random()*99999999999)+1, item: [
-       {id: "1", price: "1", quantity: "1" }
-     ]}
-  );
-  }
-
   const eventSubscribe = () => {
     window.addEventListener(
       "message",
@@ -150,7 +138,6 @@ const UkPage = ({ location }) => {
         if (event.data.event) {
           switch (data.event) {
             case "clearStorage":
-              criteoTag()
               localStorage.removeItem("session")
               break
             case "openSelect1":

@@ -4,11 +4,12 @@
  *
  * See: https://www.gatsbyjs.com/docs/use-static-query/
  */
-import Iframe from "react-iframe"
+
 import * as React from "react"
 import PropTypes from "prop-types"
 import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
+import Iframe from "react-iframe"
 
 function Seo({ description, lang, meta, title }) {
   const { site } = useStaticQuery(
@@ -75,11 +76,6 @@ function Seo({ description, lang, meta, title }) {
         width="0"
         height="0"
         styles={{ visibility: "hidden", display: "none" }}
-      />
-      <script
-        type="text/javascript"
-        src="//dynamic.criteo.com/js/ld/ld.js?a=97048"
-        async="true"
       />
     </Helmet>
   )

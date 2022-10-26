@@ -9,7 +9,6 @@ import * as React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 
-import Header from "./header"
 import "./layout.css"
 
 const Layout = ({ children }) => {
@@ -24,29 +23,8 @@ const Layout = ({ children }) => {
   `)
 
   React.useEffect(() => {
-    run()
     googleAnalitics()
   }, [])
-
-  let run = () => {
-    window.criteo_q = window.criteo_q || []
-
-    var deviceType = /iPad/.test(navigator.userAgent)
-      ? "t"
-      : /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Silk/.test(
-          navigator.userAgent
-        )
-      ? "m"
-      : "d"
-
-    window.criteo_q.push(
-      { event: "setAccount", account: 97048 },
-
-      { event: "setSiteType", type: deviceType },
-
-      { event: "viewItem", item: "1" }
-    )
-  }
 
   let googleAnalitics = () => {
     ;(function (w, d, s, l, i) {
@@ -63,8 +41,6 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      {/* <Header siteTitle={data.site.siteMetadata?.title || `Title`} /> */}
-
       <main>{children}</main>
     </>
   )
