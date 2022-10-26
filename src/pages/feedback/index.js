@@ -7,24 +7,28 @@ import SelectPopup from "../../components/SelectPopup"
 import Select from "react-select"
 import { certificados } from "../../utils/options"
 import * as queryString from "query-string"
-import Uploader from "../../components/uploader";
-import PopupContainer from "../../components/popupContainer";
+import Uploader from "../../components/uploader"
+import PopupContainer from "../../components/popupContainer"
 
 const FeedbackPageUK = ({ location }) => {
   const feedback = "Sí"
   const { name, c } = queryString.parse(location.search)
 
-  const [ sel, setSel ] = useState([]);
-  const [ selectInput, setSelectInput ] = useState("");
-  const [ visibility, setVisibility ] = useState(false);
-  const [ loading, setLoading ] = useState(true);
-  const [ session, setSession ] = useState("no sesion");
-  const popUpTheme = '#011665';
+  const [sel, setSel] = useState([])
+  const [selectInput, setSelectInput] = useState("")
+  const [visibility, setVisibility] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [session, setSession] = useState("no sesion")
+  const popUpTheme = "#011665"
 
-  const [ uploadType, setUploadType ] = useState("");
-  const [ clientId, setClientId ] = useState("");
-  const [ uploadContainerVisibility, setUploadContainerVisibility ] = useState(false);
-  const [ modalUploaderTitle, setModalUploaderTitle ] = useState('Sube tu archivo');
+  const [uploadType, setUploadType] = useState("")
+  const [clientId, setClientId] = useState("")
+  const [uploadContainerVisibility, setUploadContainerVisibility] = useState(
+    false
+  )
+  const [modalUploaderTitle, setModalUploaderTitle] = useState(
+    "Sube tu archivo"
+  )
 
   const headers = {
     Authorization: "bearer 40b3ff5fdeaf4ca6851eecadd6eec23c",
@@ -44,37 +48,37 @@ const FeedbackPageUK = ({ location }) => {
   }
 
   let closeUploadPopupHandler = () => {
-    setUploadContainerVisibility( false );
-    replyAsUser("Volver");
+    setUploadContainerVisibility(false)
+    replyAsUser("Volver")
   }
 
   const eventSubscribe = () => {
     window.addEventListener(
-        "message",
-        function (event) {
-          const data = event.data
-          if (event.data.event) {
-            switch (data.event) {
-              case "clearStorage":
-                localStorage.removeItem("session")
-                break
-              case "openSelect1":
-                //setSel([])
-                setSelectInput("cert single")
-                setVisibility(true)
-                break
-              case "upload":
-                setModalUploaderTitle(data.modalUploaderTitle)
-                setUploadType(data.variable)
-                setClientId(data.client_id)
-                setUploadContainerVisibility(true)
-                break;
-              default:
-                console.log(data)
-            }
+      "message",
+      function (event) {
+        const data = event.data
+        if (event.data.event) {
+          switch (data.event) {
+            case "clearStorage":
+              localStorage.removeItem("session")
+              break
+            case "openSelect1":
+              //setSel([])
+              setSelectInput("cert single")
+              setVisibility(true)
+              break
+            case "upload":
+              setModalUploaderTitle(data.modalUploaderTitle)
+              setUploadType(data.variable)
+              setClientId(data.client_id)
+              setUploadContainerVisibility(true)
+              break
+            default:
+              console.log(data)
           }
-        },
-        false
+        }
+      },
+      false
     )
   }
 
@@ -139,8 +143,7 @@ const FeedbackPageUK = ({ location }) => {
     console.log(sel)
   }
 
-  let replyAsUser = async( message ) => {
-
+  let replyAsUser = async message => {
     await axios({
       method: "post", //you can set what request you want to be
       url: "https://api.33bot.io/v1/conversation/message/user",
@@ -174,11 +177,11 @@ const FeedbackPageUK = ({ location }) => {
   }
 
   const updateUploadData = async (uploadedType, uploadedPath) => {
-    let dataVars = {};
+    let dataVars = {}
     dataVars[uploadedType] = {
       text: uploadedPath,
       value: uploadedPath,
-    };
+    }
 
     await axios({
       method: "post", //you can set what request you want to be
@@ -190,7 +193,7 @@ const FeedbackPageUK = ({ location }) => {
       headers,
     })
 
-    let responseMessage = 'El archivo se ha subido correctamente';
+    let responseMessage = "El archivo se ha subido correctamente"
 
     await axios({
       method: "post", //you can set what request you want to be
@@ -225,11 +228,11 @@ const FeedbackPageUK = ({ location }) => {
           selection={sel}
           title={
             selectInput === "cert single"
-              ? "Diga-nos a Certificação do seu programa"
+              ? "Select a certificate program"
               : selectInput === "cert multi"
-              ? "Quais outras certificações você tem?"
+              ? "What other certificates do you have"
               : selectInput === "devops"
-              ? "Sua Stack Dev/Ops"
+              ? "Select your DevOps Stack"
               : "selecione suas ferramentas"
           }
         >
@@ -246,20 +249,19 @@ const FeedbackPageUK = ({ location }) => {
         </SelectPopup>
 
         <PopupContainer
-            onClose={closeUploadPopupHandler}
-            show={uploadContainerVisibility}
-            title={modalUploaderTitle}
-            showButton={false}
+          onClose={closeUploadPopupHandler}
+          show={uploadContainerVisibility}
+          title={modalUploaderTitle}
+          showButton={false}
         >
           <Uploader
-              uploadType={uploadType}
-              updateData={updateUploadData}
-              popupClose={uploadPopupCloseHandler}
-              popUpTheme={popUpTheme}
-              clientId={clientId}
+            uploadType={uploadType}
+            updateData={updateUploadData}
+            popupClose={uploadPopupCloseHandler}
+            popUpTheme={popUpTheme}
+            clientId={clientId}
           />
         </PopupContainer>
-
       </div>
     </>
   )

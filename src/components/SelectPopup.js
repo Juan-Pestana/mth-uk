@@ -32,7 +32,7 @@ const SelectPopup = props => {
       }}
       className="ovrlay"
     >
-      <div className="popup">
+      <div className="popup" style={{height: '30rem' }}>
         <h2>{props.title}</h2>
         <span
           className="close"
