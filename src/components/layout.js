@@ -9,7 +9,6 @@ import * as React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 
-import Header from "./header"
 import "./layout.css"
 
 const Layout = ({ children }) => {
@@ -23,27 +22,26 @@ const Layout = ({ children }) => {
     }
   `)
 
+  React.useEffect(() => {
+    googleAnalitics()
+  }, [])
+
+  let googleAnalitics = () => {
+    ;(function (w, d, s, l, i) {
+      w[l] = w[l] || []
+      w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" })
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != "dataLayer" ? "&l=" + l : ""
+      j.async = true
+      j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl
+      f.parentNode.insertBefore(j, f)
+    })(window, document, "script", "dataLayer", "GTM-W2ZPN8T")
+  }
+
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main>{children}</main>
-        <footer
-          style={{
-            marginTop: `2rem`,
-          }}
-        >
-          © {new Date().getFullYear()}, Built by
-          {` `}
-          <a href="https://www.hrbotfactory.com">hr bot factory</a>
-        </footer>
-      </div>
+      <main>{children}</main>
     </>
   )
 }

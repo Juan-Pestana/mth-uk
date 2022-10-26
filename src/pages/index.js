@@ -7,8 +7,11 @@ import SelectPopup from "../components/SelectPopup"
 import Select from "react-select"
 import { certificados, devops, security } from "../utils/options"
 import * as queryString from "query-string"
+import Layout from "../components/layout"
+import Uploader from "../components/uploader";
+import PopupContainer from "../components/popupContainer";
 
-const UkPage = ({ location }) => {
+const WePage = ({ location }) => {
   const { sid } = queryString.parse(location.search)
 
   const isBrowser = typeof window !== "undefined"
@@ -20,11 +23,18 @@ const UkPage = ({ location }) => {
   const name = "Developer"
   const feedback = "No"
 
+  const popUpTheme = '#011665';
   const [sel, setSel] = useState([])
   const [selectInput, setSelectInput] = useState("")
   const [visibility, setVisibility] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [session, setSession] = useState("no sesion")
+  const [session, setSession] = useState("no sesion");
+
+
+  const [ uploadType, setUploadType ] = useState("");
+  const [ clientId, setClientId ] = useState("");
+  const [ uploadContainerVisibility, setUploadContainerVisibility ] = useState(false);
+  const [ modalUploaderTitle, setModalUploaderTitle ] = useState('Sube tu archivo');
 
   const headers = {
     Authorization: "bearer 40b3ff5fdeaf4ca6851eecadd6eec23c",
@@ -49,7 +59,7 @@ const UkPage = ({ location }) => {
       const getBotId = await axios({
         method: "get", //you can set what request you want to be
         url:
-          "https://api.33bot.io/v1/conversation/chat/6267c7f5790f0f0009b7a96f/bots",
+          "https://api.33bot.io/v1/conversation/chat/629de10bc4432e0009ba31d2/bots",
         headers,
       })
       //const bot_id = getBotId.data[0].id
@@ -114,6 +124,19 @@ const UkPage = ({ location }) => {
     setSel([])
   }
 
+  let replyAsUser = async( message ) => {
+
+    await axios({
+      method: "post", //you can set what request you want to be
+      url: "https://api.33bot.io/v1/conversation/message/user",
+      data: {
+        session_id: session,
+        text: message,
+      },
+      headers,
+    })
+  }
+
   let popupCloseHandler = async () => {
     await updateData()
     //setSel([])
@@ -127,6 +150,11 @@ const UkPage = ({ location }) => {
     } else {
       setSel([value])
     }
+  }
+
+  let closeUploadPopupHandler = () => {
+    setUploadContainerVisibility( false );
+    replyAsUser("Volver");
   }
 
   const eventSubscribe = () => {
@@ -157,9 +185,13 @@ const UkPage = ({ location }) => {
               setSelectInput("security")
               setVisibility(true)
               break
-            case "clearStorage":
-              localStorage.removeItem("session")
-              break
+            case "upload":
+              setModalUploaderTitle(data.modalUploaderTitle)
+              setUploadType(data.variable)
+              setClientId(data.client_id)
+              setUploadContainerVisibility(true)
+              break;
+
             default:
               console.log(data)
           }
@@ -169,89 +201,142 @@ const UkPage = ({ location }) => {
     )
   }
 
+  let uploadPopupCloseHandler = (uploadedType, uploadedPath) => {
+    updateUploadData(uploadedType, uploadedPath)
+    setUploadContainerVisibility(false)
+  }
+
+  const updateUploadData = async (uploadedType, uploadedPath) => {
+    let dataVars = {};
+    dataVars[uploadedType] = {
+      text: uploadedPath,
+      value: uploadedPath,
+    };
+
+    await axios({
+      method: "post", //you can set what request you want to be
+      url: "https://api.33bot.io/v1/conversation/update",
+      data: {
+        session_id: session,
+        global_vars: dataVars,
+      },
+      headers,
+    })
+
+    let responseMessage = 'El archivo se ha subido correctamente';
+
+    await axios({
+      method: "post", //you can set what request you want to be
+      url: "https://api.33bot.io/v1/conversation/message/user",
+      data: {
+        session_id: session,
+        text: responseMessage,
+      },
+      headers,
+    })
+  }
+
   //window.parent.postMessage( {event: "openSelect1"}, '*');
 
   return (
     <>
-      <Seo title="Join Modern Talent Hub" />
-      <div style={{ width: "100vw", height: "100vh" }}>
-        {loading ? (
-          <div className="loader">Cargando...</div>
-        ) : (
-          <Iframe
-            url={`https://chat.33bot.io/626a685ddd786d0009a4e72f?r=web&close=0&session=${session}`}
-            width="100%"
-            height="100%"
-            allow="camera;microphone"
-            frameborder="0"
-          />
-        )}
-        <SelectPopup
-          onClose={popupCloseHandler}
-          show={visibility}
-          selection={sel}
-          title={
-            selectInput === "cert single"
-              ? "Select a certificate program"
-              : selectInput === "cert multi"
-              ? "What other certificates do you have"
-              : selectInput === "devops"
-              ? "Select your DevOps Stack"
-              : "selecione suas ferramentas"
-          }
-        >
-          {selectInput === "cert single" ? (
-            <Select
-              className="basic-single"
-              classNamePrefix="select"
-              isClearable={true}
-              isSearchable={true}
-              name="certificados"
-              value={sel}
-              options={certificados}
-              onChange={changeHandler}
-            />
-          ) : selectInput === "cert multi" ? (
-            <Select
-              isMulti
-              className="basic-multi-select"
-              classNamePrefix="select"
-              isClearable={true}
-              isSearchable={true}
-              value={sel}
-              name="certificados"
-              options={certificados}
-              onChange={changeHandler}
-            />
-          ) : selectInput === "devops" ? (
-            <Select
-              isMulti
-              className="basic-multi-select"
-              classNamePrefix="select"
-              isClearable={true}
-              isSearchable={false}
-              name="devops"
-              value={sel}
-              options={devops}
-              onChange={changeHandler}
-            />
-          ) : (
-            <Select
-              isMulti
-              className="basic-multi-select"
-              classNamePrefix="select"
-              isClearable={true}
-              isSearchable={false}
-              name="security"
-              value={sel}
-              options={security}
-              onChange={changeHandler}
-            />
-          )}
-        </SelectPopup>
-      </div>
+      <Layout>
+          <Seo title="Join Modern Talent Hub" />
+          <div style={{ width: "100vw", height: "100vh" }}>
+            {loading ? (
+              <div className="loader">Cargando...</div>
+            ) : (
+              <Iframe
+                url={`https://chat.33bot.io/629df7a5e3f499000990898e?r=web&close=0&session=${session}`}
+                width="100%"
+                height="100%"
+                allow="camera;microphone"
+                frameborder="0"
+              />
+            )}
+            <SelectPopup
+              onClose={popupCloseHandler}
+              show={visibility}
+              selection={sel}
+              title={
+                selectInput === "cert single"
+                  ? "Select a certificate program"
+                  : selectInput === "cert multi"
+                  ? "What other certificates do you have"
+                  : selectInput === "devops"
+                  ? "Select your DevOps Stack"
+                  : "selecione suas ferramentas"
+              }
+            >
+              {selectInput === "cert single" ? (
+                <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isClearable={true}
+                  isSearchable={true}
+                  name="certificados"
+                  value={sel}
+                  options={certificados}
+                  onChange={changeHandler}
+                />
+              ) : selectInput === "cert multi" ? (
+                <Select
+                  isMulti
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  isClearable={true}
+                  isSearchable={true}
+                  value={sel}
+                  name="certificados"
+                  options={certificados}
+                  onChange={changeHandler}
+                />
+              ) : selectInput === "devops" ? (
+                <Select
+                  isMulti
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  isClearable={true}
+                  isSearchable={false}
+                  name="devops"
+                  value={sel}
+                  options={devops}
+                  onChange={changeHandler}
+                />
+              ) : (
+                <Select
+                  isMulti
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  isClearable={true}
+                  isSearchable={false}
+                  name="security"
+                  value={sel}
+                  options={security}
+                  onChange={changeHandler}
+                />
+              )}
+            </SelectPopup>
+
+            <PopupContainer
+                onClose={closeUploadPopupHandler}
+                show={uploadContainerVisibility}
+                title={modalUploaderTitle}
+                showButton={false}
+            >
+              <Uploader
+                  uploadType={uploadType}
+                  updateData={updateUploadData}
+                  popupClose={uploadPopupCloseHandler}
+                  popUpTheme={popUpTheme}
+                  clientId={clientId}
+              />
+            </PopupContainer>
+
+          </div>
+        </Layout>
     </>
   )
 }
 
-export default UkPage
+export default WePage

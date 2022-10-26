@@ -4,7 +4,7 @@
  *
  * See: https://www.gatsbyjs.com/docs/use-static-query/
  */
-
+import Iframe from "react-iframe"
 import * as React from "react"
 import PropTypes from "prop-types"
 import { Helmet } from "react-helmet"
@@ -69,7 +69,14 @@ function Seo({ description, lang, meta, title }) {
           content: metaDescription,
         },
       ].concat(meta)}
-    />
+    >
+      <Iframe
+        url={`https://www.googletagmanager.com/ns.html?id=GTM-W2ZPN8T`}
+        width="0"
+        height="0"
+        styles={{ visibility: "hidden", display: "none" }}
+      />
+    </Helmet>
   )
 }
 
